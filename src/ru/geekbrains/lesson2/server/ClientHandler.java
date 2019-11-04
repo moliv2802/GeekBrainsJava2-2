@@ -33,7 +33,7 @@ public class ClientHandler {
                         String str = in.readUTF();
                         if (str.startsWith("/auth")) { // /auth login72 pass72
                             String[] tokens = str.split(" ");
-                            String newNick = AuthService.getNickByLoginAndPass(tokens[1], tokens[2]);
+                            String newNick = DbService.getNickByLoginAndPass(tokens[1], tokens[2]);
                             if (newNick != null) {
                                 if (!server.isNickBusy(newNick)) {
                                     sendMsg("/authok");
@@ -55,6 +55,10 @@ public class ClientHandler {
                                 out.writeUTF("/serverclosed");
                                 break;
                             }
+                            if (str.startsWith("/history")){
+                                StringBuilder stringBuilder = DbService.getHistoryChat();
+                                out.writeUTF(stringBuilder.toString());
+                            }
                             if (str.startsWith("/w ")) { // /w nick3 lsdfhldf sdkfjhsdf wkerhwr
                                 String[] tokens = str.split(" ", 3);
                                 String m = str.substring(tokens[1].length() + 4);
@@ -66,6 +70,7 @@ public class ClientHandler {
                                 sendMsg("Вы добавили пользователя " + tokens[1] + " в черный список");
                             }
                         } else {
+                            DbService.saveHistory(nick, str);
                             server.broadcastMsg(this, nick + ": " + str);
                         }
                         System.out.println("Client: " + str);

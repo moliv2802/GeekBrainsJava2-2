@@ -3,6 +3,7 @@ package ru.geekbrains.lesson2.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.Vector;
 
 public class Server {
@@ -13,7 +14,7 @@ public class Server {
         ServerSocket server = null;
         Socket socket = null;
         try {
-            AuthService.connect();
+            DbService.connect();
             server = new ServerSocket(8189);
             System.out.println("Сервер запущен. Ожидаем клиентов...");
             while (true) {
@@ -22,6 +23,8 @@ public class Server {
                 new ClientHandler(this, socket);
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -34,7 +37,7 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            AuthService.disconnect();
+            DbService.disconnect();
         }
     }
 

@@ -100,6 +100,7 @@ public class Controller implements Initializable {
                             }
                         }
                     }
+                    getHistory();
                     while (true) {
                         String str = in.readUTF();
                         if (str.startsWith("/")) {
@@ -140,6 +141,13 @@ public class Controller implements Initializable {
             out.writeUTF(msgField.getText());
             msgField.clear();
             msgField.requestFocus();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void getHistory(){
+        try {
+            out.writeUTF("/history");
         } catch (IOException e) {
             e.printStackTrace();
         }
